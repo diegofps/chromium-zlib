@@ -1,0 +1,13 @@
+/home/diego/Sources/libzip-1.1.2/build/zlib-1.2.11.dfsg/build/CMakeFiles/install/strip.dir
+/home/diego/Sources/libzip-1.1.2/build/zlib-1.2.11.dfsg/build/CMakeFiles/install.dir
+/home/diego/Sources/libzip-1.1.2/build/zlib-1.2.11.dfsg/build/CMakeFiles/list_install_components.dir
+/home/diego/Sources/libzip-1.1.2/build/zlib-1.2.11.dfsg/build/CMakeFiles/rebuild_cache.dir
+/home/diego/Sources/libzip-1.1.2/build/zlib-1.2.11.dfsg/build/CMakeFiles/edit_cache.dir
+/home/diego/Sources/libzip-1.1.2/build/zlib-1.2.11.dfsg/build/CMakeFiles/zlibstatic.dir
+/home/diego/Sources/libzip-1.1.2/build/zlib-1.2.11.dfsg/build/CMakeFiles/zlib.dir
+/home/diego/Sources/libzip-1.1.2/build/zlib-1.2.11.dfsg/build/CMakeFiles/example.dir
+/home/diego/Sources/libzip-1.1.2/build/zlib-1.2.11.dfsg/build/CMakeFiles/minigzip.dir
+/home/diego/Sources/libzip-1.1.2/build/zlib-1.2.11.dfsg/build/CMakeFiles/install/local.dir
+/home/diego/Sources/libzip-1.1.2/build/zlib-1.2.11.dfsg/build/CMakeFiles/test.dir
+/home/diego/Sources/libzip-1.1.2/build/zlib-1.2.11.dfsg/build/CMakeFiles/minigzip64.dir
+/home/diego/Sources/libzip-1.1.2/build/zlib-1.2.11.dfsg/build/CMakeFiles/example64.dir
