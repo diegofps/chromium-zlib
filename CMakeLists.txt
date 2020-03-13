@@ -7,13 +7,19 @@ set(VERSION "1.2.11")
 
 option(ASM686 "Enable building i686 assembly implementation")
 option(AMD64 "Enable building amd64 assembly implementation")
+OPTION(RELEASE "Enable release optimizations." ON)
+OPTION(NEON "Enable NEON Instructions." OFF)
 
 ###########################################
-OPTION(NEON "Enable NEON Instructions." OFF)
 IF(NEON)
   MESSAGE( STATUS "Neon enabled" )
   ADD_DEFINITIONS(-DADLER32_SIMD_NEON)
 ENDIF(NEON)
+
+IF(RELEASE)
+  ADD_DEFINITIONS(-O3)
+ENDIF(RELEASE)
+
 ###########################################
 
 set(INSTALL_BIN_DIR "${CMAKE_INSTALL_PREFIX}/bin" CACHE PATH "Installation directory for executables")
