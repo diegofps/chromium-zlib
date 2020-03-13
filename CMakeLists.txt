@@ -8,13 +8,14 @@ set(VERSION "1.2.11")
 option(ASM686 "Enable building i686 assembly implementation")
 option(AMD64 "Enable building amd64 assembly implementation")
 OPTION(RELEASE "Enable release optimizations." ON)
-OPTION(NEON "Enable NEON Instructions." OFF)
+OPTION(ARMV8 "Enable ARMV8 Optimizations." OFF)
 
 ###########################################
-IF(NEON)
-  MESSAGE( STATUS "Neon enabled" )
+IF(ARMV8)
   ADD_DEFINITIONS(-DADLER32_SIMD_NEON)
-ENDIF(NEON)
+  ADD_DEFINITIONS(-DCRC32_ARMV8_CRC32)
+  ADD_DEFINITIONS(-DADLER32_SIMD_NEON)
+ENDIF(ARMV8)
 
 IF(RELEASE)
   ADD_DEFINITIONS(-O3)
