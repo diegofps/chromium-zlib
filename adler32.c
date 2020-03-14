@@ -7,6 +7,10 @@
 
 #include "zutil.h"
 
+#ifdef VERBOSE
+#include <stdio.h>
+#endif
+
 local uLong adler32_combine_ OF((uLong adler1, uLong adler2, z_off64_t len2));
 
 #define BASE 65521U     /* largest prime smaller than 65536 */
@@ -75,10 +79,24 @@ uLong ZEXPORT adler32_z(adler, buf, len)
 
 #if defined(ADLER32_SIMD_SSSE3)
     if (x86_cpu_enable_ssse3 && buf && len >= 64)
+    {
+#ifdef VERBOSE
+        printf("adler32_simd_ssse3\n");
+#endif
         return adler32_simd_(adler, buf, len);
+    }
 #elif defined(ADLER32_SIMD_NEON)
     if (buf && len >= 64)
+    {
+#ifdef VERBOSE
+        printf("adler32_simd_neon\n");
+#endif
         return adler32_simd_(adler, buf, len);
+    }
+#endif
+
+#ifdef VERBOSE
+    printf("adler32_serial\n");
 #endif
 
     /* split Adler-32 into component sums */

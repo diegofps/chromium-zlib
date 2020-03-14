@@ -8,6 +8,10 @@
 #include "deflate.h"
 #include <arm_neon.h>
 
+#ifdef VERBOSE
+#include <stdio.h>
+#endif
+
 inline static void ZLIB_INTERNAL neon_slide_hash_update(Posf *hash,
                                                         const uInt hash_size,
                                                         const ush w_size)
@@ -45,6 +49,9 @@ inline static void ZLIB_INTERNAL neon_slide_hash(Posf *head, Posf *prev,
                                                  const unsigned short w_size,
                                                  const uInt hash_size)
 {
+#ifdef VERBOSE
+     printf("neon_slide_hash\n");
+#endif
     /*
      * SIMD implementation for hash table rebase assumes:
      * 1. hash chain offset (Pos) is 2 bytes.

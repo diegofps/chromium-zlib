@@ -44,6 +44,10 @@
 
 #include "adler32_simd.h"
 
+#ifdef VERBOSE
+#include <stdio.h>
+#endif
+
 /* Definitions from adler32.c: largest prime smaller than 65536 */
 #define BASE 65521U
 /* NMAX is the largest n such that 255n(n+1)/2 + (n+1)(BASE-1) <= 2^32-1 */
@@ -58,6 +62,10 @@ uint32_t ZLIB_INTERNAL adler32_simd_(  /* SSSE3 */
     const unsigned char *buf,
     z_size_t len)
 {
+#ifdef VERBOSE
+    printf("ADLER32_SIMD_SSSE3\n");
+#endif
+
     /*
      * Split Adler-32 into component sums.
      */
@@ -205,6 +213,10 @@ uint32_t ZLIB_INTERNAL adler32_simd_(  /* NEON */
     const unsigned char *buf,
     z_size_t len)
 {
+#ifdef VERBOSE
+    printf("ADLER32_SIMD_NEON\n");
+#endif
+
     /*
      * Split Adler-32 into component sums.
      */

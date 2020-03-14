@@ -9,19 +9,7 @@ option(ASM686 "Enable building i686 assembly implementation")
 option(AMD64 "Enable building amd64 assembly implementation")
 OPTION(RELEASE "Enable release optimizations." ON)
 OPTION(ARMV8 "Enable ARMV8 Optimizations." OFF)
-
-###########################################
-IF(ARMV8)
-  ADD_DEFINITIONS(-DADLER32_SIMD_NEON)
-  ADD_DEFINITIONS(-DCRC32_ARMV8_CRC32)
-  ADD_DEFINITIONS(-DADLER32_SIMD_NEON)
-ENDIF(ARMV8)
-
-IF(RELEASE)
-  ADD_DEFINITIONS(-O3)
-ENDIF(RELEASE)
-
-###########################################
+OPTION(VERBOSE "Allow debug messages during runtime to check code usage" OFF)
 
 set(INSTALL_BIN_DIR "${CMAKE_INSTALL_PREFIX}/bin" CACHE PATH "Installation directory for executables")
 set(INSTALL_LIB_DIR "${CMAKE_INSTALL_PREFIX}/lib" CACHE PATH "Installation directory for libraries")
@@ -130,7 +118,6 @@ set(ZLIB_SRCS
     gzlib.c
     gzread.c
     gzwrite.c
-    inflate.c
     infback.c
     inftrees.c
     inffast.c
@@ -140,10 +127,46 @@ set(ZLIB_SRCS
     cpu_features.c
 )
 
-IF(NEON)
+IF(ARMV8)
+  MESSAGE("ARMV8 BUILD, SETTING FLAGS")
+  
+  # Build for ARMV8, general flag
+  ADD_DEFINITIONS(-DARMV8_OS_LINUX)
+
+  # Adler32
+  ADD_DEFINITIONS(-DADLER32_SIMD_NEON)
+  list(APPEND ZLIB_PRIVATE_HDRS adler32_simd.h)
   list(APPEND ZLIB_SRCS adler32_simd.c)
+
+  # crc32
+  ADD_DEFINITIONS(-DCRC32_ARMV8_CRC32)
+  list(APPEND ZLIB_PRIVATE_HDRS crc32_simd.h)
   list(APPEND ZLIB_SRCS crc32_simd.c)
-ENDIF(NEON)
+  ADD_DEFINITIONS(-march=armv8-a+crc)
+
+  # inflate_chunk
+  ADD_DEFINITIONS(-DINFLATE_CHUNK_SIMD_NEON)
+  ADD_DEFINITIONS(-DINFLATE_CHUNK_READ_64LE)
+  list(APPEND ZLIB_PRIVATE_HDRS "contrib/optimizations/chunkcopy.h")
+  list(APPEND ZLIB_PRIVATE_HDRS "contrib/optimizations/inffast_chunk.h")
+  list(APPEND ZLIB_SRCS "contrib/optimizations/inffast_chunk.c")
+  list(APPEND ZLIB_SRCS "contrib/optimizations/inflate.c")
+
+  # slide_hash
+  list(APPEND ZLIB_PRIVATE_HDRS "contrib/optimizations/slide_hash_neon.h")
+
+ELSE(ARMV8)
+  list(APPEND ZLIB_SRCS inflate.c)
+
+ENDIF(ARMV8)
+
+IF(RELEASE)
+  ADD_DEFINITIONS(-O3)
+ENDIF(RELEASE)
+
+IF(VERBOSE)
+  ADD_DEFINITIONS(-DVERBOSE)
+ENDIF(VERBOSE)
 
 if(NOT MINGW)
     set(ZLIB_DLL_SRCS
@@ -205,8 +228,15 @@ if(MINGW)
     set(ZLIB_DLL_SRCS ${CMAKE_CURRENT_BINARY_DIR}/zlib1rc.obj)
 endif(MINGW)
 
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+
 add_library(zlib SHARED ${ZLIB_SRCS} ${ZLIB_ASMS} ${ZLIB_DLL_SRCS} ${ZLIB_PUBLIC_HDRS} ${ZLIB_PRIVATE_HDRS})
 add_library(zlibstatic STATIC ${ZLIB_SRCS} ${ZLIB_ASMS} ${ZLIB_PUBLIC_HDRS} ${ZLIB_PRIVATE_HDRS})
+
+target_link_libraries(zlib Threads::Threads)
+target_link_libraries(zlibstatic Threads::Threads)
+
 set_target_properties(zlib PROPERTIES DEFINE_SYMBOL ZLIB_DLL)
 set_target_properties(zlib PROPERTIES SOVERSION 1)
 

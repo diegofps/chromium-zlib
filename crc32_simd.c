@@ -7,6 +7,10 @@
 
 #include "crc32_simd.h"
 
+#ifdef VERBOSE
+#include <stdio.h>
+#endif
+
 #if defined(CRC32_SIMD_SSE42_PCLMUL)
 
 /*
@@ -204,6 +208,10 @@ uint32_t ZLIB_INTERNAL armv8_crc32_little(unsigned long crc,
                                           const unsigned char *buf,
                                           z_size_t len)
 {
+#ifdef VERBOSE
+    printf("armv8_crc32_little\n");
+#endif
+
     uint32_t c = (uint32_t) ~crc;
 
     while (len && ((uintptr_t)buf & 7)) {

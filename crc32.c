@@ -28,6 +28,8 @@
 #  endif /* !DYNAMIC_CRC_TABLE */
 #endif /* MAKECRCH */
 
+#include <stdio.h>
+
 #include "deflate.h"
 #include "cpu_features.h"
 #include "zutil.h"      /* for STDC and FAR definitions */
@@ -217,6 +219,10 @@ unsigned long ZEXPORT crc32_z(crc, buf, len)
      * interesting crc32() calls.
      */
 #if defined(CRC32_SIMD_SSE42_PCLMUL)
+
+#ifdef VERBOSE
+    printf("crc32_simd_sse42\n");
+#endif
     /*
      * Use x86 sse4.2+pclmul SIMD to compute the crc32. Since this
      * routine can be freely used, check CPU features here.
@@ -239,6 +245,11 @@ unsigned long ZEXPORT crc32_z(crc, buf, len)
         buf += chunk_size;
     }
 #else
+
+#ifdef VERBOSE    
+    printf("crc32_serial\n");
+#endif
+
     if (buf == Z_NULL) {
         return 0UL;
     }

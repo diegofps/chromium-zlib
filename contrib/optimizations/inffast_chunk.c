@@ -9,6 +9,10 @@
 #include "contrib/optimizations/inffast_chunk.h"
 #include "contrib/optimizations/chunkcopy.h"
 
+#ifdef VERBOSE
+#include <stdio.h>
+#endif
+
 #ifdef ASMINF
 #  pragma message("Assembler code may have bugs -- use at your own risk")
 #else
@@ -291,6 +295,9 @@ unsigned start;         /* inflate()'s starting value for strm->avail_out */
                        operations can write beyond `out+len` so long as they
                        stay within 258 bytes of `out`.
                      */
+#ifdef VERBOSE
+                    printf("chunk_copy\n");
+#endif
                     out = chunkcopy_lapped_relaxed(out, dist, len);
                 }
             }
